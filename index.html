@@ -71,10 +71,10 @@
                 <h1 id="title">Rydle</h1>
                 <p><strong>Event: </strong><span id="description"></span></p>
                 <label for="guess">Year: </label>
-                <input type="number" id="guess1000s" class="guessBox"/>
-                <input type="number" id="guess100s" class="guessBox"/>
-                <input type="number" id="guess10s" class="guessBox"/>
-                <input type="number" id="guess1s" class="guessBox"/>
+                <input type="number" id="guess1000s" class="guessBox" oninput="checkInput(this)"/>
+                <input type="number" id="guess100s" class="guessBox" oninput="checkInput(this)"/>
+                <input type="number" id="guess10s" class="guessBox" oninput="checkInput(this)"/>
+                <input type="number" id="guess1s" class="guessBox" oninput="checkInput(this)"/>
                 <label for="isAD">Is AD: </label>
                 <input type="checkbox" id="isAD" checked/>
                 <button disabled="true" id="submitGuess">Guess!</button><br/>
@@ -237,6 +237,18 @@
                 $.get(url, function(data) {
                     setupGame(data.events);
                 });
+            }
+
+            function checkInput(field)
+            {
+                if (field.value < 0)
+                {
+                    field.value = 0;
+                }
+                else if (field.value > 9)
+                {
+                    field.value = 9;
+                }
             }
             
             $("#submitGuess").on("click", checkGuess);
