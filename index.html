@@ -8,6 +8,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
         <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            .column {
+                float: left;
+                width: 50%;
+                padding: 10px;
+            }
+
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
             .guessBox{
                 width: 15px;
             }
@@ -24,32 +40,63 @@
                 -moz-appearance: textfield;
             }
 
+            .result{
+                border-style: solid;
+                border-width: 1px;
+                border-color: black;
+                padding: 5px;
+            }
+
             .red{
-                color: red;
+                background-color: red;
+                color: white;
             }
 
             .green{
-                color: green;
+                background-color: green;
+                color: white;
             }
 
             .yellow{
-                color: yellow;
+                background-color: yellow;
+                color: black;
             }
         </style>
     </head>
     <body>
-        <p id="title">Rydle</p>
-        <p id="gameDescription">This game lets you guess what year a historical event happened based on a random API!</p>
-        <p id="description"></p>
-        <label for="guess">Year: </label>
-        <input type="number" id="guess1000s" class="guessBox"/>
-        <input type="number" id="guess100s" class="guessBox"/>
-        <input type="number" id="guess10s" class="guessBox"/>
-        <input type="number" id="guess1s" class="guessBox"/>
-        <label for="isAD">Is AD: </label>
-        <input type="checkbox" id="isAD" checked/>
-        <button disabled="true" id="submitGuess">Guess!</button>
-        <div id="tryList"></div>
+        <div class="row">
+            <div class="column">
+                <h1 id="title">Rydle</h1>
+                <p><strong>Event: </strong><span id="description"></span></p>
+                <label for="guess">Year: </label>
+                <input type="number" id="guess1000s" class="guessBox"/>
+                <input type="number" id="guess100s" class="guessBox"/>
+                <input type="number" id="guess10s" class="guessBox"/>
+                <input type="number" id="guess1s" class="guessBox"/>
+                <label for="isAD">Is AD: </label>
+                <input type="checkbox" id="isAD" checked/>
+                <button disabled="true" id="submitGuess">Guess!</button><br/>
+                <h3>Past Guess Results: </h3>
+                <div id="tryList"></div>
+            </div>
+            <div class="column">
+                <div>
+                <h2>Rules:</h2>
+                <p>
+                    Rydle is a game where you try to guess what year a specific event took place.</br></br>
+
+                    For each guess each number will get one of three results. </br></br>
+
+                    <strong>Green:</strong> The digit is correct</br>
+                    <strong>Yellow:</strong> The digit appears in the answer but in the incorrect location</br>
+                    <strong>Red:</strong> The digit does not appear in the answer</br></br>
+
+                    Try to find the year the event took place as quick as you can!
+                </p>
+                </div>
+            </div>
+        </div>
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
 
@@ -67,9 +114,9 @@
             
                 for(var i = 0; i < 4; i++)
                 {
-                    element += "<span class=\"" + result[i] + "\">" + guess[i] + "</span>";
+                    element += "<span class=\"result " + result[i] + "\">" + guess[i] + "</span>";
                 }
-                element += "<span class=\"" + result[4] + "\">";
+                element += " <span class=\"result " + result[4] + "\">";
                 element += (isAD ? "AD" : "BC");
                 element += "</span></br>";
                 $("#tryList").append(element);
