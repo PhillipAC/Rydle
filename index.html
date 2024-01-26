@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Rydle</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+            .guessBox{
+                width: 15px;
+            }
+
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+
+            .red{
+                color: red;
+            }
+
+            .green{
+                color: green;
+            }
+
+            .yellow{
+                color: yellow;
+            }
+        </style>
+    </head>
+    <body>
+        <p id="title">Rydle</p>
+        <p id="gameDescription">This game lets you guess what year a historical event happened based on a random API!</p>
+        <p id="description"></p>
+        <label for="guess">Year: </label>
+        <input type="number" id="guess1000s" class="guessBox"/>
+        <input type="number" id="guess100s" class="guessBox"/>
+        <input type="number" id="guess10s" class="guessBox"/>
+        <input type="number" id="guess1s" class="guessBox"/>
+        <label for="isAD">Is AD: </label>
+        <input type="checkbox" id="isAD" checked/>
+        <button disabled="true" id="submitGuess">Guess!</button>
+        <div id="tryList"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+
+            let solution = null;
+            let tries = [];
+
+            function winGame()
+            {
+                alert("You Won!");
+            }
+            
+            function updateTryList(result, guess, isAD)
+            {
+                let element = "<div class=\"attempt\">";
+            
+                for(var i = 0; i < 4; i++)
+                {
+                    element += "<span class=\"" + result[i] + "\">" + guess[i] + "</span>";
+                }
+                element += "<span class=\"" + result[4] + "\">";
+                element += (isAD ? "AD" : "BC");
+                element += "</span></br>";
+                $("#tryList").append(element);
+
+            }
+
+            function checkGuess(){
+                let result = ["red", "red", "red", "red", "red"];
+                let guesses = [];
+                let checkedAgainst = solution.year.toString();
+                let isADguess = $("#isAD").is(":checked");
+                guesses[0] = $("#guess1000s").val();
+                guesses[1] = $("#guess100s").val();
+                guesses[2] = $("#guess10s").val();
+                guesses[3] = $("#guess1s").val();
+                resultAD = "red";
+                let greenCount = 0;
+
+                for(var i = 0; i < 4; i++)
+                {
+                    if(guesses[i] == checkedAgainst[i])
+                    {
+                        greenCount++;
+                        result[i] = "green";
+                    }
+                    else{
+                        for(var j = 0; j < 4; j++)
+                        {
+                            if(j != i && guesses[i] == checkedAgainst[j])
+                            {
+                                result[i] = "yellow";
+                            }
+                        }
+                    }
+                }
+                
+                if(isADguess == (solution.year > 0))
+                {
+                    greenCount++;
+                    result[4] = "green";
+                }
+
+                updateTryList(result, guesses, isADguess);
+                tries.push(result);
+
+                let won = greenCount == 5;
+
+                if(won)
+                {
+                    winGame();
+                }
+            }
+
+            $("#submitGuess").on("click", checkGuess);
+
+            function setupGame(data){
+                let date1 = new Date("07/18/1990");
+                let date2 = new Date();
+                let differenceInTime = date2.getTime() - date1.getTime();
+                let dayDifference = Math.round(differenceInTime / (1000 * 3600 * 24));
+                let index = dayDifference % data.length;
+                
+                solution = data[index];
+                $("#description").append("<span>" + solution.text + "</span>");     
+                $("#submitGuess").prop("disabled", false);
+            }
+
+            let today = new Date();
+            let month = String(today.getMonth() + 1).padStart(2,"0");
+            let day = String(today.getDate()).padStart(2,"0");
+            let url =  `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
+ 
+            $.get(url, function(data) {
+                setupGame(data.events);
+            });
+        </script>
+    </body>
+</html>
