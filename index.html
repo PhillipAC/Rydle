@@ -42,9 +42,11 @@
 
             .result{
                 border-style: solid;
-                border-width: 1px;
+                border-width: 2px;
                 border-color: black;
                 padding: 5px;
+                margin: 5px;
+                display: inline-block;
             }
 
             .red{
@@ -100,12 +102,56 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
 
+            let solved = false;
             let solution = null;
             let tries = [];
+            let date2;
+
+            function getEmoji(color)
+            {
+                switch(color)
+                {
+                    case "red":
+                        return "🟥";
+                    case "yellow":
+                        return "🟨";
+                    case "green":
+                        return "🟩";
+                    default:
+                        return "🤨";
+                }
+            }
+
+            function copyResults()
+            {
+                let month   = date2.getUTCMonth() + 1;
+                let day     = date2.getUTCDate();
+                let year    = date2.getUTCFullYear();
+                let copyResult = `Rydle (${month}/${day}/${year}):\n`;
+                for(var i = 0; i < tries.length; i++)
+                {
+                    for(var j = 0; j < 4; j++)
+                    {
+                        copyResult += getEmoji(tries[i][j]);
+                    }
+                    copyResult += " ";
+                    copyResult += getEmoji(tries[i][4]);
+                    copyResult +="\n";
+                }
+                let temp = document.createElement("textarea");
+                document.body.appendChild(temp);
+                temp.value = copyResult;
+                temp.select();
+                document.execCommand("copy");
+                document.body.removeChild(temp);
+            }
 
             function winGame()
             {
-                alert("You Won!");
+                solved = true;
+                $("#submitGuess").prop("disabled", true);
+                $("#tryList").append("<button id=\"shareResults\">Share</button>");
+                $("#shareResults").on("click", copyResults());
             }
             
             function updateTryList(result, guess, isAD)
@@ -170,11 +216,9 @@
                 }
             }
 
-            $("#submitGuess").on("click", checkGuess);
-
             function setupGame(data){
                 let date1 = new Date("07/18/1990");
-                let date2 = new Date();
+                date2 = new Date();
                 let differenceInTime = date2.getTime() - date1.getTime();
                 let dayDifference = Math.round(differenceInTime / (1000 * 3600 * 24));
                 let index = dayDifference % data.length;
@@ -183,15 +227,20 @@
                 $("#description").append("<span>" + solution.text + "</span>");     
                 $("#submitGuess").prop("disabled", false);
             }
-
-            let today = new Date();
-            let month = String(today.getMonth() + 1).padStart(2,"0");
-            let day = String(today.getDate()).padStart(2,"0");
-            let url =  `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
  
-            $.get(url, function(data) {
-                setupGame(data.events);
-            });
+            function loadGame(){
+                let today = new Date();
+                let month = String(today.getMonth() + 1).padStart(2,"0");
+                let day = String(today.getDate()).padStart(2,"0");
+                let url =  `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
+            
+                $.get(url, function(data) {
+                    setupGame(data.events);
+                });
+            }
+            
+            $("#submitGuess").on("click", checkGuess);
+            loadGame();
         </script>
     </body>
 </html>
