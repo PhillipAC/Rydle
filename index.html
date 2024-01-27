@@ -185,7 +185,7 @@
             function checkGuess(){
                 let result = ["black", "black", "black", "black", "black"];
                 let guesses = [];
-                let checkedAgainst = solution.year.toString();
+                let checkedAgainst = solution.year.toString().padStart(4, "0");
                 let isADguess = $("#isAD").is(":checked");
                 guesses[0] = $("#guess1000s").val();
                 guesses[1] = $("#guess100s").val();
