@@ -127,7 +127,7 @@
                 let month   = date2.getUTCMonth() + 1;
                 let day     = date2.getUTCDate();
                 let year    = date2.getUTCFullYear();
-                let copyResult = `Rydle (${month}/${day}/${year}):\n`;
+                let copyResult = `Rydle (${month}/${day}/${year})[${tries.length} moves]\n`;
                 for(var i = 0; i < tries.length; i++)
                 {
                     for(var j = 0; j < 4; j++)
@@ -138,6 +138,7 @@
                     copyResult += getEmoji(tries[i][4]);
                     copyResult +="\n";
                 }
+                copyResult +="Play at: https://phillipac.github.io/Rydle/";
                 let temp = document.createElement("textarea");
                 document.body.appendChild(temp);
                 temp.value = copyResult;
