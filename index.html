@@ -49,8 +49,8 @@
                 display: inline-block;
             }
 
-            .red{
-                background-color: red;
+            .black{
+                background-color: black;
                 color: white;
             }
 
@@ -105,14 +105,29 @@
             let solved = false;
             let solution = null;
             let tries = [];
-            let date2;
+            let date = new Date();
+            let month   = date.getUTCMonth() + 1;
+            let day     = date.getUTCDate();
+            let year    = date.getUTCFullYear();
 
+            function RNG(seed) {
+                this.m = 0x80000000;
+                this.a = 1103515245;
+                this.c = 12345;
+
+                this.state = seed ? seed : Math.floor(Math.random() * (this.m - 1));
+            }
+            RNG.prototype.next = function() {
+                this.state = (this.a * this.state + this.c) % this.m;
+                return this.state / (this.m - 1);
+            }
+            
             function getEmoji(color)
             {
                 switch(color)
                 {
-                    case "red":
-                        return "🟥";
+                    case "black":
+                        return "⬛";
                     case "yellow":
                         return "🟨";
                     case "green":
@@ -124,9 +139,6 @@
 
             function copyResults()
             {
-                let month   = date2.getUTCMonth() + 1;
-                let day     = date2.getUTCDate();
-                let year    = date2.getUTCFullYear();
                 let copyResult = `Rydle (${month}/${day}/${year})[${tries.length} moves]\n`;
                 for(var i = 0; i < tries.length; i++)
                 {
@@ -138,7 +150,7 @@
                     copyResult += getEmoji(tries[i][4]);
                     copyResult +="\n";
                 }
-                copyResult +="Play at: https://phillipac.github.io/Rydle/";
+                copyResult +="https://phillipac.github.io/Rydle/";
                 let temp = document.createElement("textarea");
                 document.body.appendChild(temp);
                 temp.value = copyResult;
@@ -171,7 +183,7 @@
             }
 
             function checkGuess(){
-                let result = ["red", "red", "red", "red", "red"];
+                let result = ["black", "black", "black", "black", "black"];
                 let guesses = [];
                 let checkedAgainst = solution.year.toString();
                 let isADguess = $("#isAD").is(":checked");
@@ -179,7 +191,7 @@
                 guesses[1] = $("#guess100s").val();
                 guesses[2] = $("#guess10s").val();
                 guesses[3] = $("#guess1s").val();
-                resultAD = "red";
+                resultAD = "black";
                 let greenCount = 0;
 
                 for(var i = 0; i < 4; i++)
@@ -218,11 +230,10 @@
             }
 
             function setupGame(data){
-                let date1 = new Date("07/18/1990");
-                date2 = new Date();
-                let differenceInTime = date2.getTime() - date1.getTime();
-                let dayDifference = Math.round(differenceInTime / (1000 * 3600 * 24));
-                let index = dayDifference % data.length;
+                let today = `${day}${month}${year}`;
+                let rng = new RNG(date);
+                let randomNumber = rng.next();
+                let index = Math.floor(randomNumber*(data.length+1));
                 
                 solution = data[index];
                 $("#description").append("<span>" + solution.text + "</span>");     
