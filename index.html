@@ -231,7 +231,7 @@
 
             function setupGame(data){
                 let today = `${day}${month}${year}`;
-                let rng = new RNG(date);
+                let rng = new RNG(today);
                 let randomNumber = rng.next();
                 let index = Math.floor(randomNumber*(data.length+1));
                 
