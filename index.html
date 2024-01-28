@@ -109,9 +109,9 @@
             let solution = null;
             let tries = [];
             let date = new Date();
-            let month   = date.getUTCMonth() + 1;
-            let day     = date.getUTCDate();
-            let year    = date.getUTCFullYear();
+            let month   = date.getMonth() + 1;
+            let day     = date.getDate();
+            let year    = date.getFullYear();
 
             function RNG(seed) {
                 this.m = 0x80000000;
