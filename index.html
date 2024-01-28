@@ -75,8 +75,6 @@
                 <input type="number" id="guess100s" class="guessBox" oninput="checkInput(this)"/>
                 <input type="number" id="guess10s" class="guessBox" oninput="checkInput(this)"/>
                 <input type="number" id="guess1s" class="guessBox" oninput="checkInput(this)"/>
-                <label for="isAD">Is AD: </label>
-                <input type="checkbox" id="isAD" checked/>
                 <button disabled="true" id="submitGuess">Guess!</button><br/>
                 <h3>Past Guess Results: </h3>
                 <div id="tryList"></div>
@@ -146,8 +144,6 @@
                     {
                         copyResult += getEmoji(tries[i][j]);
                     }
-                    copyResult += " ";
-                    copyResult += getEmoji(tries[i][4]);
                     copyResult +="\n";
                 }
                 copyResult +="https://phillipac.github.io/Rydle/";
@@ -167,7 +163,7 @@
                 $("#shareResults").on("click", copyResults());
             }
             
-            function updateTryList(result, guess, isAD)
+            function updateTryList(result, guess)
             {
                 let element = "<div class=\"attempt\">";
             
@@ -175,23 +171,19 @@
                 {
                     element += "<span class=\"result " + result[i] + "\">" + guess[i] + "</span>";
                 }
-                element += " <span class=\"result " + result[4] + "\">";
-                element += (isAD ? "AD" : "BC");
-                element += "</span></br>";
+                element += "</br>";
                 $("#tryList").append(element);
 
             }
 
             function checkGuess(){
-                let result = ["black", "black", "black", "black", "black"];
+                let result = ["black", "black", "black", "black"];
                 let guesses = [];
                 let checkedAgainst = solution.year.toString().padStart(4, "0");
-                let isADguess = $("#isAD").is(":checked");
                 guesses[0] = $("#guess1000s").val();
                 guesses[1] = $("#guess100s").val();
                 guesses[2] = $("#guess10s").val();
                 guesses[3] = $("#guess1s").val();
-                resultAD = "black";
                 let greenCount = 0;
 
                 for(var i = 0; i < 4; i++)
@@ -211,25 +203,18 @@
                         }
                     }
                 }
-                
-                if(isADguess == (solution.year > 0))
-                {
-                    greenCount++;
-                    result[4] = "green";
-                }
 
-                updateTryList(result, guesses, isADguess);
+                updateTryList(result, guesses);
                 tries.push(result);
 
-                let won = greenCount == 5;
-
-                if(won)
+                if(greenCount == 4)
                 {
                     winGame();
                 }
             }
 
             function setupGame(data){
+                let filteredEvents = data.filter((x) => x.year >= 0);
                 let today = `${day}${month}${year}`;
                 let rng = new RNG(today);
                 let randomNumber = rng.next();
