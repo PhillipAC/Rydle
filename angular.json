@@ -23,7 +23,6 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "baseHref" : "/Rydle/",
-            "deployUrl": "/Rydle/",
             "polyfills": [
               "zone.js"
             ],
