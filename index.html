@@ -63,6 +63,10 @@
                 background-color: yellow;
                 color: black;
             }
+
+            .success{
+                color: green;
+            }
         </style>
     </head>
     <body>
@@ -154,14 +158,17 @@
                 temp.select();
                 document.execCommand("copy");
                 document.body.removeChild(temp);
+                let copyNotification = $("<div id=\"resultsCopied\" class=\"success\">Results copied</div>");
+                $("#shareButton").append(copyNotification);
+                setInterval(() => $("#resultsCopied").remove(), 1000);
             }
 
             function winGame()
             {
                 solved = true;
                 $("#submitGuess").prop("disabled", true);
-                $("#tryList").append("<button id=\"shareResults\">Share</button>");
-                $("#shareResults").on("click", copyResults());
+                $("#shareButton").append("<button id=\"shareResults\">Share</button>");
+                $("#shareResults").on("click", copyResults);
             }
             
             function updateTryList(result, guess)
