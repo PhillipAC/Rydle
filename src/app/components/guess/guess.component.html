@@ -1,0 +1,6 @@
+<label for="guess">Year: </label>
+<span *ngFor="let digit of guess; let i = index; trackBy:trackByIndex">
+    <input [disabled]="!guessingEnabled" #input (onModelChange)="clampInput($event, input)" 
+        type="number" class="guessBox" [(ngModel)]="guess[i]"/>
+</span>
+<button [disabled]="!guessingEnabled" (click)="checkGuess()">Guess!</button><br/>

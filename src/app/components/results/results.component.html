@@ -1,0 +1,6 @@
+<h3>Past Guess Results: </h3>
+<div *ngFor="let guessResult of guessResults">
+    <span *ngFor="let unitResult of guessResult.unitResults">
+        <span [ngClass]="unitResult.result.toLowerCase() + ' result'">{{unitResult.digit}}</span>
+    </span>
+</div>
