@@ -7,7 +7,7 @@ import { ResultsComponent } from './components/results/results.component';
 import { HelpComponent } from './components/help/help.component';
 import { GuessComponent } from './components/guess/guess.component';
 import { ShareComponent } from './components/share/share.component';
-import { CommonModule, NgClass, NgFor } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { GameService } from './services/game.service';
 import { GuessResult } from './models/guessResult';
 
@@ -16,8 +16,7 @@ import { GuessResult } from './models/guessResult';
   standalone: true,
   imports: [RouterOutlet, 
             CommonModule,
-            NgFor,
-            NgClass,
+            NgIf,
             HttpClientModule,
             FormsModule,
             ResultsComponent,
