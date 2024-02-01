@@ -52,19 +52,29 @@ export class GuessComponent implements OnInit {
 
   updateGuess(value: number){
     this.guess[this.selectedField] = value;
-    this.selectedField++;
-    if(this.selectedField == 4)
-    {
-      this.selectedField = 0;
-    }
+    this.shiftRight();
   }
 
   @HostListener('window:keyup', ['$event'])
   onKeyPress(event: KeyboardEvent){
+    console.log(event.key);
     let keyPressed: number = Number(event.key);
     if(event.key === "Enter")
     {
       this.checkGuess();
+    }
+    else if(event.key === "ArrowLeft")
+    {
+      this.shiftLeft();
+    }
+    else if(event.key === "ArrowRight")
+    {
+      this.shiftRight();
+    }
+    else if(event.key === "Backspace")
+    {
+      this.guess[this.selectedField] = 0;
+      this.shiftLeft();
     }
     else if(!(isNaN(keyPressed) || event.key === null || event.key === ' '))
     {
@@ -72,8 +82,33 @@ export class GuessComponent implements OnInit {
     }
   }
 
+  shiftLeft()
+  {
+    if(this.selectedField != 0)
+    {
+      this.selectedField--;
+    }
+  }
+
+  shiftRight()
+  {
+    if(this.selectedField != 3)
+    {
+      this.selectedField++;
+    }
+  }
+
   onKeyPadPress(value: number)
   {
-    this.updateGuess(value);
+    if(value === -2){
+      this.shiftLeft();
+    }
+    else if(value === -1){
+      this.shiftRight();
+    }
+    else{
+      this.updateGuess(value);
+
+    }
   }
 }
