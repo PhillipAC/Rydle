@@ -1,6 +1,16 @@
-<label for="guess">Year: </label>
-<span *ngFor="let digit of guess; let i = index; trackBy:trackByIndex">
-    <input [disabled]="!guessingEnabled" #input (onModelChange)="clampInput($event, input)" 
-        type="number" class="guessBox" [(ngModel)]="guess[i]"/>
-</span>
-<button [disabled]="!guessingEnabled" (click)="checkGuess()">Guess!</button><br/>
+<div class="guess-group">
+    <span *ngFor="let digit of guess; let i = index; trackBy:trackByIndex">
+        <span class="guess-box" [ngClass]="i == selectedField ? 'guess-selected' : ''" (click)="setFocus(i)">{{guess[i]}}</span>
+    </span>
+</div>
+<div class="number-pad">
+    <div *ngFor="let row of numberPad" class="d-flex justify-content-center">
+        <span *ngFor="let key of row" (click)="onKeyPadPress(key)" class="number-pad-key btn btn-primary">
+            {{key}}
+        </span>
+    </div>
+    <div class="d-flex justify-content-center">
+        <span (click)="onKeyPadPress(0)" class="btn btn-primary number-pad-key">0</span>
+    </div>
+</div>
+<button [disabled]="!guessingEnabled" class="btn btn-primary btn-submit" (click)="checkGuess()">Guess!</button><br/>
