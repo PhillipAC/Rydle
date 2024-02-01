@@ -10,7 +10,9 @@
         </span>
     </div>
     <div class="d-flex justify-content-center">
+        <span (click)="onKeyPadPress(-2)" class="btn btn-primary number-pad-key">←</span>
         <span (click)="onKeyPadPress(0)" class="btn btn-primary number-pad-key">0</span>
+        <span (click)="onKeyPadPress(-1)" class="btn btn-primary number-pad-key">→</span>
     </div>
 </div>
 <button [disabled]="!guessingEnabled" class="btn btn-primary btn-submit" (click)="checkGuess()">Guess!</button><br/>
