@@ -79,3 +79,11 @@ span .result{
     height: 40px;
     font-size: 30px;
 }
+
+.results-area{
+    border-style: solid;
+    border-radius: 10px;
+    width: 250px;
+    height: 120px;
+    overflow-y: scroll;
+}
