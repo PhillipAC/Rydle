@@ -54,7 +54,8 @@ export class GameService {
     let won = false;
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
-    let checkedAgainst = this.solution.year.toString().padStart(4, "0");
+    let checkedAgainst: number[] = Array
+      .from(this.solution.year.toString().padStart(4, "0"));
     let greenCount = 0;
 
     for(var i = 0; i < 4; i++)
@@ -63,18 +64,22 @@ export class GameService {
       if(guess[i] == checkedAgainst[i])
       {
         greenCount++;
-        currentResult = Result.Green;
+        result[i] = Result.Green;
+        checkedAgainst[i] = -1;
       }
-      else{
-        for(var j = 0; j < 4; j++)
+    }
+    for(var i = 0; i < 4; i++)
+    {
+      if(result[i] != Result.Green)
+      {
+        let location = checkedAgainst.findIndex(x => x == guess[i]);
+        if(location != -1)
         {
-          if(j != i && guess[i] == checkedAgainst[j])
-          {
-            currentResult = Result.Yellow;
-          }
+          result[i] = Result.Yellow;
+          checkedAgainst[location] = -1;
         }
       }
-      results.push(new DigitResult(guess[i], currentResult, i));
+      results.push(new DigitResult(guess[i], result[i], i));
     }
 
     if(greenCount == 4)

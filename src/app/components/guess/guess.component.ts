@@ -36,6 +36,7 @@ export class GuessComponent implements OnInit {
 
   checkGuess()
   {
+    this.selectedField = 0;
     this.guessingEnabled = false;
     this.gameService.checkGuess(this.guess);
   }
@@ -62,7 +63,6 @@ export class GuessComponent implements OnInit {
     if(event.key === "Enter")
     {
       this.checkGuess();
-      this.selectedField = 0;
     }
     else if(event.key === "ArrowLeft")
     {
@@ -109,7 +109,6 @@ export class GuessComponent implements OnInit {
     }
     else{
       this.updateGuess(value);
-
     }
   }
 }
