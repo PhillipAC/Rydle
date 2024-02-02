@@ -56,25 +56,37 @@ export class GameService {
     let results: DigitResult[] = [];
     let checkedAgainst = this.solution.year.toString().padStart(4, "0");
     let greenCount = 0;
-
+    for (var i = 0; i < result.length; i++)
+    {
+      results.push(new DigitResult(guess[i], Result.Black, 0));
+    }
+    let unfound = Object.assign([], checkedAgainst);
+    console.log(unfound);
     for(var i = 0; i < 4; i++)
     {
       let currentResult = Result.Black
       if(guess[i] == checkedAgainst[i])
       {
         greenCount++;
-        currentResult = Result.Green;
+        results[i] = new DigitResult(guess[i], Result.Green, i);
+        delete unfound[i];
       }
-      else{
-        for(var j = 0; j < 4; j++)
+    }
+    for(var i = 0; i < 4; i++)
+    {
+      if(results.find(r => (r.result === Result.Green && r.index === i)) === undefined)
+      {
+        for(var j = 0; j < unfound.length; j++)
         {
-          if(j != i && guess[i] == checkedAgainst[j])
+          console.log(guess[i]);
+          console.log(unfound[j]);
+          if(guess[i] === unfound[j])
           {
-            currentResult = Result.Yellow;
+            results[i] = new DigitResult(guess[i], Result.Yellow, i);
+            delete unfound[j];
           }
         }
       }
-      results.push(new DigitResult(guess[i], currentResult));
     }
 
     if(greenCount == 4)

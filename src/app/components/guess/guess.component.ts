@@ -62,6 +62,7 @@ export class GuessComponent implements OnInit {
     if(event.key === "Enter")
     {
       this.checkGuess();
+      this.selectedField = 0;
     }
     else if(event.key === "ArrowLeft")
     {
