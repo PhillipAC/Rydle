@@ -21,6 +21,8 @@ export class GameService {
   year: number = 0;
   solution: any = null;
 
+  isRandom: boolean = false;
+
   results: DigitResult[][] = [];
 
   constructor(private http:HttpClient, private prng:PrngService) { }
@@ -30,6 +32,19 @@ export class GameService {
     this.day = today.getDate();
     this.month = today.getMonth() + 1;
     this.year = today.getFullYear();
+
+    let month = String(this.month).padStart(2,"0");
+    let day = String(this.day).padStart(2,"0");
+    let url =  `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
+    return this.http.get(url);
+  }
+
+  getRandomGame(): Observable<any>{
+    let date = new Date(new Date().valueOf() - Math.random()*(1e+12));
+    this.day = date.getDate();
+    this.month = date.getMonth() + 1;
+    this.year = date.getFullYear();
+    this.isRandom = true;
 
     let month = String(this.month).padStart(2,"0");
     let day = String(this.day).padStart(2,"0");
@@ -96,7 +111,15 @@ export class GameService {
 
   generateGameSummary(): string
   {
-    let summary = `Rydle (${this.month}/${this.day}/${this.year})[${this.results.length} moves]\n`;
+    let summary = `Rydle`;
+    if(!this.isRandom){
+      summary += ` (${this.month}/${this.day}/${this.year})`;
+    }
+    else
+    {
+      summary += " (random)"
+    }
+    summary += `[${this.results.length} moves]\n`;
     for(var i = 0; i < this.results.length; i++)
     {
         for(var j = 0; j < 4; j++)
@@ -106,6 +129,10 @@ export class GameService {
         summary +="\n";
     }
     summary +="https://phillipac.github.io/Rydle/";
+    if(this.isRandom)
+    {
+      summary +="random";
+    }
     return summary
   }
 
