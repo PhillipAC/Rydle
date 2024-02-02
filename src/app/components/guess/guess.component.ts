@@ -1,4 +1,4 @@
-import { NgFor, NgClass } from '@angular/common';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../../services/game.service';
@@ -7,12 +7,14 @@ import { GuessResult } from '../../models/guessResult';
 @Component({
   selector: 'app-guess',
   standalone: true,
-  imports: [FormsModule, NgFor, NgClass],
+  imports: [FormsModule, NgFor, NgClass, NgIf],
   templateUrl: './guess.component.html',
   styleUrl: './guess.component.scss'
 })
 export class GuessComponent implements OnInit {
 
+  showError = false;
+  
   guessingEnabled = false;
 
   selectedField = 0;
@@ -27,7 +29,15 @@ export class GuessComponent implements OnInit {
   {
     this.gameService.gameLoaded$.subscribe(() => {this.guessingEnabled = true;});
     this.gameService.guessChecked$.subscribe((guessResult: GuessResult) => {
-      if(!guessResult.won)
+      if(!guessResult.isValid)
+      {
+        this.showError = true;
+        setTimeout(() => {
+          this.showError = false;
+          this.guessingEnabled = true;
+        }, 500);
+      }
+      else if(!guessResult.won)
       {
         this.guessingEnabled = true;
       }
@@ -36,9 +46,12 @@ export class GuessComponent implements OnInit {
 
   checkGuess()
   {
-    this.selectedField = 0;
-    this.guessingEnabled = false;
-    this.gameService.checkGuess(this.guess);
+    if(this.guessingEnabled)
+    {
+      this.selectedField = 0;
+      this.guessingEnabled = false;
+      this.gameService.checkGuess(this.guess);
+    }
   }
 
   trackByIndex(index: number, item: any)

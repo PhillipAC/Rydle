@@ -87,3 +87,18 @@ span .result{
     height: 120px;
     overflow-y: scroll;
 }
+
+.outline-red{
+    border-color: red;
+    background-color: red;
+}
+
+.fade {
+    opacity: 1;
+    animation: fade 0.5s linear;
+}
+
+@keyframes fade {
+    0%,100% { opacity: 0 }
+    50% { opacity: 1 }
+  }

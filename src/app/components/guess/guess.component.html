@@ -3,6 +3,7 @@
         <span class="guess-box" [ngClass]="i == selectedField ? 'guess-selected' : ''" (click)="setFocus(i)">{{guess[i]}}</span>
     </span>
 </div>
+<div *ngIf="showError" class="fade text-danger d-flex justify-content-center">Already Guessed</div>
 <div class="number-pad">
     <div *ngFor="let row of numberPad" class="d-flex justify-content-center">
         <span *ngFor="let key of row" (click)="onKeyPadPress(key)" class="number-pad-key btn btn-primary">

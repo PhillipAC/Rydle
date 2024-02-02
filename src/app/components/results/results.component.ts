@@ -20,10 +20,13 @@ export class ResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gameService.guessChecked$.subscribe((result: GuessResult) => {console.log(result);this.loadResult(result);});
+    this.gameService.guessChecked$.subscribe((result: GuessResult) => {this.loadResult(result);});
   }
 
   loadResult(results: GuessResult): void{
-    this.guessResults.unshift(results);
+    if(results.isValid)
+    {
+      this.guessResults.unshift(results);
+    }
   }
 }

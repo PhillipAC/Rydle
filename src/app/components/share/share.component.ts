@@ -20,6 +20,6 @@ export class ShareComponent {
     let summary = this.gameService.generateGameSummary();
     navigator.clipboard.writeText(summary);
     this.showSuccess = true;
-    setInterval(() => {this.showSuccess = false}, 1000);
+    setTimeout(() => {this.showSuccess = false}, 1000);
   }
 }

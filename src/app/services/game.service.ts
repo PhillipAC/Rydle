@@ -66,47 +66,55 @@ export class GameService {
   }
 
   checkGuess(guess: number[]): void{
-    let won = false;
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
-    let checkedAgainst: number[] = Array
-      .from(this.solution.year.toString().padStart(4, "0"));
-    let greenCount = 0;
+    if(this.validateGuess(guess))
+    {
+      let won = false;
+      let checkedAgainst: number[] = Array
+        .from(this.solution.year.toString().padStart(4, "0"));
+      let greenCount = 0;
 
-    for(var i = 0; i < 4; i++)
-    {
-      let currentResult = Result.Black
-      if(guess[i] == checkedAgainst[i])
+      for(var i = 0; i < 4; i++)
       {
-        greenCount++;
-        result[i] = Result.Green;
-        checkedAgainst[i] = -1;
-      }
-    }
-    for(var i = 0; i < 4; i++)
-    {
-      if(result[i] != Result.Green)
-      {
-        let location = checkedAgainst.findIndex(x => x == guess[i]);
-        if(location != -1)
+        let currentResult = Result.Black
+        if(guess[i] == checkedAgainst[i])
         {
-          result[i] = Result.Yellow;
-          checkedAgainst[location] = -1;
+          greenCount++;
+          result[i] = Result.Green;
+          checkedAgainst[i] = -1;
         }
       }
-      results.push(new DigitResult(guess[i], result[i], i));
-    }
+      for(var i = 0; i < 4; i++)
+      {
+        if(result[i] != Result.Green)
+        {
+          let location = checkedAgainst.findIndex(x => x == guess[i]);
+          if(location != -1)
+          {
+            result[i] = Result.Yellow;
+            checkedAgainst[location] = -1;
+          }
+        }
+        results.push(new DigitResult(guess[i], result[i], i));
+      }
 
-    if(greenCount == 4)
+      if(greenCount == 4)
+      {
+        won = true;
+      }
+
+      let newResult = new GuessResult(won, results, true);
+
+      this.results.push(results)
+
+
+      this.guessCheckedObserver.next(newResult);
+    }
+    else
     {
-      won = true;
+      this.guessCheckedObserver.next(new GuessResult(false, results, false));
     }
-
-    let newResult = new GuessResult(won, results);
-
-    this.results.push(results)
-
-    this.guessCheckedObserver.next(newResult);
   }
 
   generateGameSummary(): string
@@ -149,5 +157,26 @@ export class GameService {
           default:
               return "🤨";
       }
+  }
+
+  validateGuess(guess: number[]): boolean
+  {
+    for(var i = 0; i < this.results.length; i++)
+    {
+      let isSame = true;
+      for(var j = 0; j < guess.length; j++)
+      {
+        if(guess[j] != this.results[i][j].digit)
+        {
+          isSame = false;
+          break;
+        }
+      }
+      if(isSame)
+      {
+        return false;
+      }
+    }
+    return true;
   }
 }
