@@ -9,5 +9,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './help.component.scss'
 })
 export class HelpComponent {
-
+  random: string = '';
 }

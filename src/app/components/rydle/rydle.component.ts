@@ -38,13 +38,21 @@ export class RydleComponent {
     this.gameService.guessChecked$
       .subscribe((results: GuessResult) => this.shareEnabled = results.won);
 
-    let isRandomGame = this.activeRoute.snapshot.url[0]?.path === "random";
-    if(!isRandomGame){
-      this.gameService.getGameData()
+    let randomId = this.activeRoute.snapshot.queryParamMap.get("random");
+    let isRandomGame = randomId === "";
+    if(isRandomGame)
+    {
+      console.log("Is Random Game");
+      this.gameService.getRandomGame()
+        .subscribe((data) => this.gameService.setupGame(data.events));
+    }
+    else if(randomId != null)
+    {
+      this.gameService.getGameDataByCode(randomId)
         .subscribe((data) => this.gameService.setupGame(data.events));
     }
     else{
-      this.gameService.getRandomGame()
+      this.gameService.getGameData()
         .subscribe((data) => this.gameService.setupGame(data.events));
     }
   }
