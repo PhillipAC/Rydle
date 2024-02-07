@@ -3,8 +3,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { PrngService } from './prng.service';
 import { GuessResult } from '../models/guessResult';
-import { Result } from '../../enumerations/Result';
+import { Result } from '../enumerations/Result';
 import { DigitResult } from '../models/digitResult';
+import { Direction } from '../enumerations/Direction';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class GameService {
 
   isRandom: boolean = false;
 
-  results: DigitResult[][] = [];
+  results: GuessResult[] = [];
 
   constructor(private http:HttpClient, private prng:PrngService) { }
 
@@ -87,6 +88,7 @@ export class GameService {
   checkGuess(guess: number[]): void{
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
+    let direction: Direction = Direction.NA;
     if(this.validateGuess(guess))
     {
       let won = false;
@@ -118,21 +120,33 @@ export class GameService {
         results.push(new DigitResult(guess[i], result[i], i));
       }
 
-      if(greenCount == 4)
+      if(greenCount == 3)
+      {
+        if(guess[0]*1000+guess[1]*100+guess[2]*10+guess[3] > +this.solution.year)
+        {
+          direction = Direction.Down;
+        }
+        else
+        {
+          direction = Direction.Up;
+        }
+      }
+
+      else if(greenCount == 4)
       {
         won = true;
       }
 
-      let newResult = new GuessResult(won, results, true);
+      let newResult = new GuessResult(won, results, direction, true);
 
-      this.results.push(results)
+      this.results.push(newResult)
 
 
       this.guessCheckedObserver.next(newResult);
     }
     else
     {
-      this.guessCheckedObserver.next(new GuessResult(false, results, false));
+      this.guessCheckedObserver.next(new GuessResult(false, results, direction, false));
     }
   }
 
@@ -151,7 +165,11 @@ export class GameService {
     {
         for(var j = 0; j < 4; j++)
         {
-            summary += this.getEmoji(this.results[i][j].result);
+            summary += this.getEmoji(this.results[i].unitResults[j].result);
+            if(this.results[i].Direction != Direction.NA)
+            {
+              summary += this.getDirectionEmoji(this.results[i].Direction);
+            }
         }
         summary +="\n";
     }
@@ -178,6 +196,19 @@ export class GameService {
       }
   }
 
+  getDirectionEmoji(direction: Direction)
+  {
+    switch(direction)
+    {
+      case Direction.Up:
+        return "⬆️";
+      case Direction.Down:
+        return "⬇️";
+      default:
+        return "🤨";
+    }
+  }
+
   validateGuess(guess: number[]): boolean
   {
     for(var i = 0; i < this.results.length; i++)
@@ -185,7 +216,7 @@ export class GameService {
       let isSame = true;
       for(var j = 0; j < guess.length; j++)
       {
-        if(guess[j] != this.results[i][j].digit)
+        if(guess[j] != this.results[i].unitResults[j].digit)
         {
           isSame = false;
           break;

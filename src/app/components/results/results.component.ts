@@ -1,14 +1,16 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { GuessResult } from '../../models/guessResult';
 import { GameService } from '../../services/game.service';
+import { Direction } from '../../enumerations/Direction';
 
 @Component({
   selector: 'app-results',
   standalone: true,
   imports: [
     NgClass,
-    NgFor
+    NgFor,
+    NgIf
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.scss'
@@ -28,5 +30,9 @@ export class ResultsComponent implements OnInit {
     {
       this.guessResults.unshift(results);
     }
+  }
+
+  public get direction(): typeof Direction {
+    return Direction; 
   }
 }

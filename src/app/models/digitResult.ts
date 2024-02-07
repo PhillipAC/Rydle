@@ -1,4 +1,4 @@
-import { Result } from "../../enumerations/Result";
+import { Result } from "../enumerations/Result";
 
 export class DigitResult
 {
