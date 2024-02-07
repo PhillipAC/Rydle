@@ -166,10 +166,10 @@ export class GameService {
         for(var j = 0; j < 4; j++)
         {
             summary += this.getEmoji(this.results[i].unitResults[j].result);
-            if(this.results[i].Direction != Direction.NA)
-            {
-              summary += this.getDirectionEmoji(this.results[i].Direction);
-            }
+        }
+        if(this.results[i].Direction != Direction.NA)
+        {
+          summary += this.getDirectionEmoji(this.results[i].Direction);
         }
         summary +="\n";
     }
