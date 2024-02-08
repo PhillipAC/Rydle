@@ -154,22 +154,38 @@ export class GameService {
   {
     let summary = `Rydle`;
     if(!this.isRandom){
-      summary += ` (${this.month}/${this.day}/${this.year})`;
+      summary += ` (${this.month.toString().padStart(2, "0")}/${this.day.toString().padStart(2, "0")}/${this.year})`;
     }
     else
     {
       summary += " (random)"
     }
-    summary += `[${this.results.length} moves]\n`;
+    summary += ` [${this.results.length} moves]\n`;
+    let onlyThree: number [] = [-1, -1, -1, 1];
+    for(var i = 0; i < this.results.length; i++){
+      if(this.results[i].Direction != Direction.NA){
+        for(var j = 0; j < 4; j++){
+          if(this.results[i].unitResults[j].result == Result.Black){
+            onlyThree[i] = j;
+          }
+        }
+      }
+    }
     for(var i = 0; i < this.results.length; i++)
     {
         for(var j = 0; j < 4; j++)
         {
+          if(this.results[i].Direction === Direction.NA){
             summary += this.getEmoji(this.results[i].unitResults[j].result);
-        }
-        if(this.results[i].Direction != Direction.NA)
-        {
-          summary += this.getDirectionEmoji(this.results[i].Direction);
+          }
+          else{
+            if(onlyThree[i] === j){
+              summary += this.getDirectionEmoji(this.results[i].Direction);
+            }
+            else{
+              summary += this.getEmoji(this.results[i].unitResults[j].result);1
+            }
+          }
         }
         summary +="\n";
     }
@@ -178,6 +194,7 @@ export class GameService {
     {
       summary += ("?random=" + this.getGameCode());
     }
+    console.log(summary);
     return summary
   }
 
