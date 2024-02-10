@@ -9,6 +9,7 @@ import { ResultsComponent } from '../results/results.component';
 import { HelpComponent } from '../help/help.component';
 import { GuessComponent } from '../guess/guess.component';
 import { ShareComponent } from '../share/share.component';
+import { RecordService } from '../../services/record.service';
 
 @Component({
   selector: 'app-rydle',
@@ -29,7 +30,8 @@ export class RydleComponent {
   description = "";
   shareEnabled = false;
 
-  constructor(private gameService: GameService, private activeRoute: ActivatedRoute){}
+  constructor(private gameService: GameService, private recordService: RecordService, 
+    private activeRoute: ActivatedRoute){}
 
   ngOnInit(){
     this.gameService.gameLoaded$
@@ -53,7 +55,10 @@ export class RydleComponent {
     }
     else{
       this.gameService.getGameData()
-        .subscribe((data) => this.gameService.setupGame(data.events));
+        .subscribe((data) => {
+          this.gameService.setupGame(data.events)
+          this.recordService.loadPastGuesses();
+        });
     }
   }
 }

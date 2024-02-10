@@ -6,6 +6,7 @@ import { GuessResult } from '../models/guessResult';
 import { Result } from '../enumerations/Result';
 import { DigitResult } from '../models/digitResult';
 import { Direction } from '../enumerations/Direction';
+import { RecordService } from './record.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,16 @@ export class GameService {
 
   results: GuessResult[] = [];
 
-  constructor(private http:HttpClient, private prng:PrngService) { }
+  constructor(private http:HttpClient, private prng:PrngService, 
+    private recordService: RecordService) { 
+      recordService.guessLoaded$.subscribe(guesses => {
+        for(var i = 0; i < guesses.length; i++)
+        {
+          let unitResults = guesses[i].unitResults;
+          this.checkGuess(unitResults.map(x => x.digit), false);
+        }
+      })
+    }
 
   getGameData(): Observable<any>{
     let today = new Date();
@@ -85,7 +95,7 @@ export class GameService {
     this.gameLoadedObserver.next(this.solution);
   }
 
-  checkGuess(guess: number[]): void{
+  checkGuess(guess: number[], saveGuess = true): void{
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
     let direction: Direction = Direction.NA;
@@ -141,7 +151,10 @@ export class GameService {
 
       this.results.push(newResult)
 
-
+      if(!this.isRandom && saveGuess)
+      {
+        this.recordService.saveGuess(newResult);
+      }
       this.guessCheckedObserver.next(newResult);
     }
     else

@@ -29,6 +29,7 @@ export class GuessComponent implements OnInit {
   {
     this.gameService.gameLoaded$.subscribe(() => {this.guessingEnabled = true;});
     this.gameService.guessChecked$.subscribe((guessResult: GuessResult) => {
+      this.guessingEnabled = false;
       if(!guessResult.isValid)
       {
         this.showError = true;
