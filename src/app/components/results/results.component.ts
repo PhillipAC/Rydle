@@ -28,7 +28,7 @@ export class ResultsComponent implements OnInit {
   loadResult(results: GuessResult): void{
     if(results.isValid)
     {
-      this.guessResults.unshift(results);
+      this.guessResults.push(results);
     }
   }
 
