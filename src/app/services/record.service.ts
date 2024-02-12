@@ -8,7 +8,7 @@ import { Summary } from '../models/summary';
 })
 export class RecordService {
 
-  private readonly GuessesKey = "Guesses";
+  private readonly GuessKey = "Rydle.Guesses";
   private readonly SummaryKey = "Rydle.Summary";
 
   guessLoadedObserver = new Subject<GuessResult[]>();
@@ -27,14 +27,14 @@ export class RecordService {
   saveGuess(guessResult: GuessResult): void{
     let savedGuesses = this.loadGuesses();
     savedGuesses.push(guessResult);
-    localStorage.setItem(this.GuessesKey, JSON.stringify({
+    localStorage.setItem(this.GuessKey, JSON.stringify({
       TimeStamp: this.getDate(),
       Guesses: savedGuesses
     }));
   }
 
   loadGuesses(): GuessResult[]{
-    let rawData = localStorage.getItem(this.GuessesKey);
+    let rawData = localStorage.getItem(this.GuessKey);
     if(rawData != null)
     {
       let data = JSON.parse(rawData);
