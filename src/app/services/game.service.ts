@@ -7,6 +7,7 @@ import { Result } from '../enumerations/Result';
 import { DigitResult } from '../models/digitResult';
 import { Direction } from '../enumerations/Direction';
 import { RecordService } from './record.service';
+import { Summary } from '../models/summary';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,10 @@ export class GameService {
 
   gameLoadedObserver = new Subject();
   guessCheckedObserver = new Subject<GuessResult>();
+  gameWonObserver = new Subject<Summary>();
   public gameLoaded$ = this.gameLoadedObserver.asObservable();
   public guessChecked$ = this.guessCheckedObserver.asObservable();
+  public gameWon$ = this.gameWonObserver.asObservable();
 
   day: number = 0;
   month: number = 0;
@@ -156,6 +159,17 @@ export class GameService {
         this.recordService.saveGuess(newResult);
       }
       this.guessCheckedObserver.next(newResult);
+      if(won && !this.isRandom)
+      {
+        let summary: Summary;
+        if(saveGuess){
+          summary = this.recordService.saveToSummaryNewCount(this.results.length);
+        }
+        else{
+          summary = this.recordService.loadSummary();
+        }
+        this.gameWonObserver.next(summary);
+      }
     }
     else
     {

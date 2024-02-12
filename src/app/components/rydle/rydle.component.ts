@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { GuessResult } from '../../models/guessResult';
@@ -10,6 +10,7 @@ import { HelpComponent } from '../help/help.component';
 import { GuessComponent } from '../guess/guess.component';
 import { ShareComponent } from '../share/share.component';
 import { RecordService } from '../../services/record.service';
+import { SummaryComponent } from '../summary/summary.component';
 
 @Component({
   selector: 'app-rydle',
@@ -19,6 +20,7 @@ import { RecordService } from '../../services/record.service';
     NgIf,
     HttpClientModule,
     FormsModule,
+    SummaryComponent,
     ResultsComponent,
     HelpComponent,
     GuessComponent,
@@ -26,9 +28,11 @@ import { RecordService } from '../../services/record.service';
   templateUrl: './rydle.component.html',
   styleUrl: './rydle.component.scss'
 })
-export class RydleComponent {
+export class RydleComponent implements OnInit, AfterViewInit {
   description = "";
   shareEnabled = false;
+  showSummary = false;
+  showGuessInput = true;
 
   constructor(private gameService: GameService, private recordService: RecordService, 
     private activeRoute: ActivatedRoute){}
@@ -40,6 +44,11 @@ export class RydleComponent {
     this.gameService.guessChecked$
       .subscribe((results: GuessResult) => this.shareEnabled = results.won);
 
+    this.gameService.gameWon$
+      .subscribe(() => this.gameWon());
+  }
+
+  ngAfterViewInit(){
     let randomId = this.activeRoute.snapshot.queryParamMap.get("random");
     let isRandomGame = randomId === "";
     if(isRandomGame)
@@ -60,5 +69,11 @@ export class RydleComponent {
           this.recordService.loadPastGuesses();
         });
     }
+  }
+
+  gameWon() {
+    console.log("Game Won");
+    this.showSummary = true;
+    this.showGuessInput = false;
   }
 }

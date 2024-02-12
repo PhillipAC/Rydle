@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { GuessResult } from '../models/guessResult';
 import { Subject } from 'rxjs';
+import { Summary } from '../models/summary';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecordService {
 
-  private readonly Guesses = "Guesses";
+  private readonly GuessesKey = "Guesses";
+  private readonly SummaryKey = "Rydle.Summary";
 
   guessLoadedObserver = new Subject<GuessResult[]>();
   public guessLoaded$ = this.guessLoadedObserver.asObservable();
@@ -25,14 +27,14 @@ export class RecordService {
   saveGuess(guessResult: GuessResult): void{
     let savedGuesses = this.loadGuesses();
     savedGuesses.push(guessResult);
-    localStorage.setItem(this.Guesses, JSON.stringify({
+    localStorage.setItem(this.GuessesKey, JSON.stringify({
       TimeStamp: this.getDate(),
       Guesses: savedGuesses
     }));
   }
 
   loadGuesses(): GuessResult[]{
-    let rawData = localStorage.getItem(this.Guesses);
+    let rawData = localStorage.getItem(this.GuessesKey);
     if(rawData != null)
     {
       let data = JSON.parse(rawData);
@@ -50,5 +52,28 @@ export class RecordService {
     let guessResults = this.loadGuesses();
     console.log(guessResults);
     this.guessLoadedObserver.next(guessResults);
+  }
+
+  saveToSummaryNewCount(turnCount: number): Summary{
+    let currentSummary = this.loadSummary();
+    let totalCount: number = currentSummary.averageTurns*currentSummary.gamesPlayed;
+    totalCount += turnCount;
+    currentSummary.gamesPlayed++;
+    currentSummary.averageTurns = totalCount / currentSummary.gamesPlayed;
+    return this.saveToSummary(currentSummary);
+  }
+
+  saveToSummary(summary: Summary): Summary{
+    localStorage.setItem(this.SummaryKey, JSON.stringify(summary));
+    return summary;
+  }
+
+  loadSummary(): Summary{
+    let rawData = localStorage.getItem(this.SummaryKey);
+    if(rawData != null)
+    {
+      return JSON.parse(rawData);
+    }
+    return new Summary();
   }
 }
