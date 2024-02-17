@@ -11,6 +11,7 @@ import { GuessComponent } from '../guess/guess.component';
 import { ShareComponent } from '../share/share.component';
 import { RecordService } from '../../services/record.service';
 import { SummaryComponent } from '../summary/summary.component';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-rydle',
@@ -24,7 +25,8 @@ import { SummaryComponent } from '../summary/summary.component';
     ResultsComponent,
     HelpComponent,
     GuessComponent,
-    ShareComponent],
+    ShareComponent,
+    LoadingComponent],
   templateUrl: './rydle.component.html',
   styleUrl: './rydle.component.scss'
 })
@@ -33,13 +35,17 @@ export class RydleComponent implements OnInit, AfterViewInit {
   shareEnabled = false;
   showSummary = false;
   showGuessInput = true;
+  isLoading = true;
 
   constructor(private gameService: GameService, private recordService: RecordService, 
     private activeRoute: ActivatedRoute){}
 
   ngOnInit(){
     this.gameService.gameLoaded$
-      .subscribe((event: any) => this.description = event.text);
+      .subscribe((event: any) => {
+        this.description = event.text;
+        this.isLoading = false;
+      });
 
     this.gameService.guessChecked$
       .subscribe((results: GuessResult) => this.shareEnabled = results.won);

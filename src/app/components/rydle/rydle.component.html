@@ -1,4 +1,7 @@
-<div class="container">
+<div *ngIf="isLoading" class="container">
+  <app-loading></app-loading>
+</div>
+<div [hidden]="isLoading" class="container">
     <div class="row">
         <div class="col-sm">
             <div class="d-flex justify-content-center">
