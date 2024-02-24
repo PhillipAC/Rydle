@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { GuessResult } from '../../models/guessResult';
@@ -13,6 +13,7 @@ import { RecordService } from '../../services/record.service';
 import { ThemeService } from '../../services/theme.service';
 import { SummaryComponent } from '../summary/summary.component';
 import { LoadingComponent } from '../loading/loading.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-rydle',
@@ -31,12 +32,16 @@ import { LoadingComponent } from '../loading/loading.component';
   templateUrl: './rydle.component.html',
   styleUrl: './rydle.component.scss'
 })
-export class RydleComponent implements OnInit, AfterViewInit {
+export class RydleComponent implements OnInit, AfterViewInit, OnDestroy {
   description = "";
   shareEnabled = false;
   showSummary = false;
   showGuessInput = true;
   isLoading = true;
+
+  gameLoadedSub: Subscription | null = null;
+  guessCheckedSub: Subscription | null = null;
+  gameWonSub: Subscription | null = null;
 
   constructor(private gameService: GameService, private recordService: RecordService, 
     private activeRoute: ActivatedRoute, private themeService: ThemeService){}
@@ -57,6 +62,12 @@ export class RydleComponent implements OnInit, AfterViewInit {
       .subscribe(() => this.gameWon());
   }
 
+  ngOnDestroy(): void {
+      this.gameLoadedSub?.unsubscribe();
+      this.gameWonSub?.unsubscribe();
+      this.guessCheckedSub?.unsubscribe();
+  }
+
   ngAfterViewInit(){
     let randomId = this.activeRoute.snapshot.queryParamMap.get("random");
     let isRandomGame = randomId === "";
@@ -68,10 +79,12 @@ export class RydleComponent implements OnInit, AfterViewInit {
     }
     else if(randomId != null)
     {
+      console.log("Has code");
       this.gameService.getGameDataByCode(randomId)
         .subscribe((data) => this.gameService.setupGame(data.events));
     }
     else{
+      console.log("Is Daily");
       this.gameService.getGameData()
         .subscribe((data) => {
           this.gameService.setupGame(data.events)

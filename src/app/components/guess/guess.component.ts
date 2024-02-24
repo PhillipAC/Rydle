@@ -1,8 +1,10 @@
 import { NgFor, NgClass, NgIf } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../../services/game.service';
 import { GuessResult } from '../../models/guessResult';
+import { Observable, Subscription } from 'rxjs';
+import { Summary } from '../../models/summary';
 
 @Component({
   selector: 'app-guess',
@@ -11,7 +13,7 @@ import { GuessResult } from '../../models/guessResult';
   templateUrl: './guess.component.html',
   styleUrl: './guess.component.scss'
 })
-export class GuessComponent implements OnInit {
+export class GuessComponent implements OnInit, OnDestroy {
 
   showError = false;
   
@@ -23,12 +25,20 @@ export class GuessComponent implements OnInit {
 
   numberPad: number[][] = [[7,8,9],[4,5,6],[1,2,3]];
 
+  gameLoadedSubscription: Subscription | null = null;
+  guessCheckedSub: Subscription | null = null;
+
   constructor(private gameService: GameService){}
+
+  ngOnDestroy(): void {
+    this.gameLoadedSubscription?.unsubscribe();
+    this.guessCheckedSub?.unsubscribe();
+  }
 
   ngOnInit()
   {
-    this.gameService.gameLoaded$.subscribe(() => {this.guessingEnabled = true;});
-    this.gameService.guessChecked$.subscribe((guessResult: GuessResult) => {
+    this.gameLoadedSubscription = this.gameService.gameLoaded$.subscribe(() => {this.guessingEnabled = true;});
+    this.guessCheckedSub = this.gameService.guessChecked$.subscribe((guessResult: GuessResult) => {
       this.guessingEnabled = false;
       if(!guessResult.isValid)
       {

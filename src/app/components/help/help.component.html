@@ -20,7 +20,8 @@
 
 <div class="row">
     <div class="col-sm d-flex justify-content-center">
-        <button class="option-button" (click)="loadRandom()">Random Game</button>
+        <button [hidden]="isRandomGame" class="option-button" (click)="loadRandom()">Random Game</button>
+        <button [hidden]="!isRandomGame" class="option-button" (click)="loadDaily()">Daily Game</button>
     </div>
     <div class="col-sm d-flex justify-content-center">
         <button (click)="toggleDarkMode()" class="option-button">{{isDarkMode ? 'Light' : 'Dark'}} Mode</button>

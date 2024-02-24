@@ -16,7 +16,7 @@ export class GameService {
 
   gameLoadedObserver = new Subject();
   guessCheckedObserver = new Subject<GuessResult>();
-  gameWonObserver = new Subject<Summary>();
+  gameWonObserver = new Subject<Summary | null>();
   public gameLoaded$ = this.gameLoadedObserver.asObservable();
   public guessChecked$ = this.guessCheckedObserver.asObservable();
   public gameWon$ = this.gameWonObserver.asObservable();
@@ -40,6 +40,19 @@ export class GameService {
         }
       })
     }
+
+  reset(): void{
+    this.day = 0;
+    this.month = 0;
+    this.year = 0;
+    this.solution = null;
+    this.isRandom = false;
+    this.results = [];
+  }
+
+  getGuessCount(): number{
+    return this.results.length;
+  }
 
   getGameData(): Observable<any>{
     let today = new Date();
@@ -102,6 +115,7 @@ export class GameService {
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
     let direction: Direction = Direction.NA;
+    console.log(guess);
     if(this.validateGuess(guess))
     {
       let won = false;
@@ -111,7 +125,6 @@ export class GameService {
 
       for(var i = 0; i < 4; i++)
       {
-        let currentResult = Result.Black
         if(guess[i] == checkedAgainst[i])
         {
           greenCount++;
@@ -158,17 +171,22 @@ export class GameService {
       {
         this.recordService.saveGuess(newResult);
       }
+      console.log(newResult);
       this.guessCheckedObserver.next(newResult);
-      if(won && !this.isRandom)
+      if(won)
       {
-        let summary: Summary;
-        if(saveGuess){
-          summary = this.recordService.saveToSummaryNewCount(this.results.length);
+        if(!this.isRandom){
+          let summary: Summary;
+          if(saveGuess){
+            summary = this.recordService.saveToSummaryNewCount(this.results.length);
+          }
+          else{
+            summary = this.recordService.loadSummary();
+          }
+          this.gameWonObserver.next(summary);
+        }else{
+          this.gameWonObserver.next(null);
         }
-        else{
-          summary = this.recordService.loadSummary();
-        }
-        this.gameWonObserver.next(summary);
       }
     }
     else

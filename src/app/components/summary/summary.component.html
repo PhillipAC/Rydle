@@ -2,10 +2,10 @@
     <div class="pb-2">
         <b>Score: </b> {{score}}
     </div>
-    <div class="p-0">
+    <div class="p-0" *ngIf="summary != null">
         <b>Games Played:  </b> {{summary.gamesPlayed}}
     </div>
-    <div class="p-0">
+    <div class="p-0" *ngIf="summary != null">
         <b>Average Score: </b> {{summary.averageTurns | number:'1.0-2'}}
     </div>
 </div>

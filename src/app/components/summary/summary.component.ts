@@ -1,34 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DecimalPipe, NgIf } from '@angular/common';
 import { Summary } from '../../models/summary';
 import { GameService } from '../../services/game.service';
 import { RecordService } from '../../services/record.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-summary',
   standalone: true,
   imports: [
-    DecimalPipe
+    DecimalPipe,
+    NgIf
   ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent implements OnInit, OnDestroy {
 
-  summary: Summary = new Summary();
-  score: Number = new Number();
+  summary: Summary | null = null;
+  score: Number = 0;
 
-  constructor(private gameService: GameService, private recordService: RecordService){
+  gameWonSub: Subscription | null = null;
+
+  constructor(private gameService: GameService){
   }
 
   ngOnInit(): void {
     this.gameService.gameWon$
-      .subscribe((summary: Summary) => this.loadSummary(summary))
+      .subscribe((summary: Summary | null) => this.loadSummary(summary))
   }
 
-  loadSummary(summary: Summary) {
-    console.log(summary);
+  ngOnDestroy(): void {
+    this.gameWonSub?.unsubscribe();
+  }
+
+  loadSummary(summary: Summary | null) {
     this.summary = summary;
-    this.score = this.recordService.loadGuesses().length;
+    this.score = this.gameService.getGuessCount();
   }
 }
