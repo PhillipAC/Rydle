@@ -84,8 +84,10 @@ span .result{
     border-style: solid;
     border-radius: 10px;
     width: 280px;
-    height: 180px;
-    overflow-y: scroll;
+    height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .outline-red{
