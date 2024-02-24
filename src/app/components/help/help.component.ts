@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-help',
@@ -10,4 +11,15 @@ import { RouterLink } from '@angular/router';
 })
 export class HelpComponent {
   random: string = '';
+  isDarkMode = true;
+
+  constructor(private themeService: ThemeService){
+      this.isDarkMode = this.themeService.isDarkMode();
+    }
+
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      this.themeService.setDarkMode(this.isDarkMode);
+      this.themeService.saveMode();
+    }
 }

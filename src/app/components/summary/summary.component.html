@@ -1,2 +1,11 @@
-<b>Games Played:  </b> {{summary.gamesPlayed}} <br>
-<b>Average Turns: </b> {{summary.averageTurns}}
+<div class="d-flex flex-column text-center">
+    <div class="pb-2">
+        <b>Score: </b> {{score}}
+    </div>
+    <div class="p-0">
+        <b>Games Played:  </b> {{summary.gamesPlayed}}
+    </div>
+    <div class="p-0">
+        <b>Average Score: </b> {{summary.averageTurns | number:'1.0-2'}}
+    </div>
+</div>

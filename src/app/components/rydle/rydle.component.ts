@@ -10,6 +10,7 @@ import { HelpComponent } from '../help/help.component';
 import { GuessComponent } from '../guess/guess.component';
 import { ShareComponent } from '../share/share.component';
 import { RecordService } from '../../services/record.service';
+import { ThemeService } from '../../services/theme.service';
 import { SummaryComponent } from '../summary/summary.component';
 import { LoadingComponent } from '../loading/loading.component';
 
@@ -38,9 +39,11 @@ export class RydleComponent implements OnInit, AfterViewInit {
   isLoading = true;
 
   constructor(private gameService: GameService, private recordService: RecordService, 
-    private activeRoute: ActivatedRoute){}
+    private activeRoute: ActivatedRoute, private themeService: ThemeService){}
 
   ngOnInit(){
+    this.themeService.loadMode();
+
     this.gameService.gameLoaded$
       .subscribe((event: any) => {
         this.description = event.text;
