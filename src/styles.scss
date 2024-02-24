@@ -1,5 +1,6 @@
-.guessBox{
-    width: 30px;
+.dark{
+    background-color: #121213;
+    color: #f8f8f8;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -15,79 +16,114 @@ input[type=number] {
 }
 
 span .result{
-    border-style: solid;
-    border-width: 2px;
-    border-color: black;
+    // border-style: solid;
+    // border-width: 2px;
+    // border-color: black;
     padding: 5px;
-    margin: 5px;
+    margin: 2.5px;
     display: inline-block;
-    height: 40px;
-    width: 40px;
-    text-align: center;
-    font-size: 30px;
+    height: 62.5px;
+    width: 62px;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    font-size: 32px;
+    font-weight: bold;
     padding: 0 0 0 0;
     line-height: 35px;
-    border-radius: 20%;
 }
 
 .guess-box{
-    border-style: solid;
-    border-width: 2px;
-    border-color: black;
-    padding: 5px;
-    margin: 5px;
-    display: inline-block;
-    height: 40px;
-    width: 40px;
-    text-align: center;
-    font-size: 30px;
-    padding: 0 0 0 0;
-    line-height: 35px;
-    border-radius: 20%; 
+    background-color: #ebebeb;
 }
 
 .guess-selected{
     background-color: aqua;
 }
 
+.dark .black{
+    background-color: #3a3a3c;
+    color: white;
+}
+
+.dark .green{
+    background-color: #538d4e;
+    color: white;
+}
+
+.dark .yellow{
+    background-color: #b59f3b;
+    color: white;
+}
+
 .black{
-    background-color: black;
+    background-color: #787c7e;
     color: white;
 }
 
 .green{
-    background-color: green;
+    background-color: #6aaa64;
     color: white;
 }
 
 .yellow{
-    background-color: yellow;
-    color: black;
+    background-color: #c9b458;
+    color: white;
 }
 
 .success{
-    color: green;
+    color: #6aaa64;
 }
 
 .btn-submit{
     width: 200px;
 }
 
-.number-pad-key{
-    margin: 2px;
-    width: 40px;
-    height: 40px;
-    font-size: 30px;
+.number-pad{
+    padding: 5px;
+    margin: 2.5px;
+    height: 62.5px;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 0 0 0 0;
+    line-height: 35px;
+    background-color: #d3d6da;
+    color: black;
+    cursor: pointer;
+}
+
+.number-pad:disabled{
+    cursor: not-allowed;
+}
+
+.key{
+    width: 62px;
+}
+
+.present{
+    background-color: #6aaa64;
+    color: white;
+}
+
+.not-present{
+    background-color: #787c7e;
+    color: white;
 }
 
 .results-area{
-    border-style: solid;
-    border-radius: 10px;
-    width: 280px;
-    height: 320px;
+    width: auto;
+    height: 390px;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
+}
+
+.guess-group{
+    width: auto;
+    display: flex;
 }
 
 .outline-red{

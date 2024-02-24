@@ -7,18 +7,23 @@
             <div class="d-flex justify-content-center">
               <h1 id="title">Rydle</h1>
             </div>
-            <div class="d-flex justify-content-center">
-              <span><strong>Event: </strong>{{description}}</span>
+            <br />
+            <div class="d-flex justify-content-center flex-column">
+              <span class="p-2"><strong>On this day in history: </strong>{{description}}</span>
+              <span class="p-2"><strong>What year was this?</strong></span>
             </div>
+            <br />
             <div class="d-flex justify-content-center">
               <app-results></app-results>
             </div>
             <div class="d-flex justify-content-center">
               <app-guess *ngIf="showGuessInput"></app-guess>
             </div>
+            <br />
             <div class="d-flex justify-content-center">
               <app-summary [hidden]="!showSummary"></app-summary>
             </div>
+            <br />
             <div class="row d-flex justify-content-center">
               <app-share *ngIf="shareEnabled"></app-share>
             </div>
