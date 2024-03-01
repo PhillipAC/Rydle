@@ -26,30 +26,35 @@ span .result{
     padding: 5px;
     margin: 2.5px;
     display: inline-block;
-    height: 62.5px;
-    width: 62px;
+    height: 40px;
+    width: 40px;
     justify-content: center;
     align-items: center;
     display: inline-flex;
-    font-size: 32px;
+    font-size: 25px;
     font-weight: bold;
     padding: 0 0 0 0;
-    line-height: 35px;
+    line-height: 20px;
 }
 
+span .result.guess-box{
+    height: 50px;
+    width: 50px;
+    font-size: 25px;
+}
 
 .btn-submit{
-    width: 200px;
+    width: 170px;
 }
 
 .number-pad{
     padding: 5px;
     margin: 2.5px;
-    height: 62.5px;
+    height: 50px;
     justify-content: center;
     align-items: center;
     display: inline-flex;
-    font-size: 32px;
+    font-size: 25px;
     font-weight: bold;
     padding: 0 0 0 0;
     line-height: 35px;
@@ -61,12 +66,12 @@ span .result{
 }
 
 .key{
-    width: 62px;
+    width: 50px;
 }
 
 .results-area{
     width: auto;
-    height: 390px;
+    height: 230px;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
