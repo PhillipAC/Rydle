@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, filter } from 'rxjs';
 import { PrngService } from './prng.service';
 import { GuessResult } from '../models/guessResult';
 import { Result } from '../enumerations/Result';
@@ -73,9 +73,6 @@ export class GameService {
     this.year = date.getFullYear();
     this.isRandom = true;
 
-    console.log(this.day);
-    console.log(this.month);
-
     let month = String(this.month).padStart(2,"0");
     let day = String(this.day).padStart(2,"0");
     let url =  `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
@@ -88,9 +85,6 @@ export class GameService {
     this.month = +date.substring(2, 4);
     this.year = +date.substring(4);
     this.isRandom = true;
-    console.log(this.day);
-    console.log(this.month);
-    console.log(this.year);
 
     let month = String(this.month).padStart(2,"0");
     let day = String(this.day).padStart(2,"0");
@@ -100,6 +94,7 @@ export class GameService {
 
   setupGame(data: any): void{
     let filteredEvents = data.filter((x: any) => x.year >= 0);
+    filteredEvents = filteredEvents.filter((x: any) => !x.text.includes(x.year));
     let today = `${this.day}${this.month}${this.year}`;
     let rng = new PrngService();
     rng.reseed(+today);
@@ -115,7 +110,6 @@ export class GameService {
     let result = [Result.Black, Result.Black, Result.Black, Result.Black];
     let results: DigitResult[] = [];
     let direction: Direction = Direction.NA;
-    console.log(guess);
     if(this.validateGuess(guess))
     {
       let won = false;
@@ -171,7 +165,6 @@ export class GameService {
       {
         this.recordService.saveGuess(newResult);
       }
-      console.log(newResult);
       this.guessCheckedObserver.next(newResult);
       if(won)
       {
@@ -239,7 +232,6 @@ export class GameService {
     {
       summary += ("?random=" + this.getGameCode());
     }
-    console.log(summary);
     return summary
   }
 
@@ -294,16 +286,12 @@ export class GameService {
 
   getGameCode(): string{
     let today = `${this.day}${this.month.toString().padStart(2, '0')}${this.year.toString().padStart(4,'0')}`;
-    console.log(today);
     let hexCode = (+today).toString(16);
-    console.log(hexCode);
-    console.log(this.decodeGameCode(hexCode));
     return hexCode;
   }
 
   decodeGameCode(hexCode: string): string{
     var hex = parseInt(hexCode, 16).toString().padStart(8, '0')
-    console.log(hex);
     return hex;
   }
 }

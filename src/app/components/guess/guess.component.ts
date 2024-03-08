@@ -82,7 +82,6 @@ export class GuessComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   onKeyPress(event: KeyboardEvent){
-    console.log(event.key);
     let keyPressed: number = Number(event.key);
     if(event.key === "Enter")
     {

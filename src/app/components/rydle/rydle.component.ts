@@ -73,18 +73,15 @@ export class RydleComponent implements OnInit, AfterViewInit, OnDestroy {
     let isRandomGame = randomId === "";
     if(isRandomGame)
     {
-      console.log("Is Random Game");
       this.gameService.getRandomGame()
         .subscribe((data) => this.gameService.setupGame(data.events));
     }
     else if(randomId != null)
     {
-      console.log("Has code");
       this.gameService.getGameDataByCode(randomId)
         .subscribe((data) => this.gameService.setupGame(data.events));
     }
     else{
-      console.log("Is Daily");
       this.gameService.getGameData()
         .subscribe((data) => {
           this.gameService.setupGame(data.events)
@@ -94,7 +91,6 @@ export class RydleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   gameWon() {
-    console.log("Game Won");
     this.showSummary = true;
     this.showGuessInput = false;
   }

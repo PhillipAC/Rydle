@@ -50,7 +50,6 @@ export class RecordService {
 
   loadPastGuesses(): void{
     let guessResults = this.loadGuesses();
-    console.log(guessResults);
     this.guessLoadedObserver.next(guessResults);
   }
 

@@ -32,7 +32,6 @@ export class ResultsComponent implements OnInit, OnDestroy {
   }
 
   loadResult(results: GuessResult): void{
-    console.log(results);
     if(results.isValid)
     {
       this.guessResults.unshift(results);
