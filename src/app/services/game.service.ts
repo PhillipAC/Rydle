@@ -99,7 +99,7 @@ export class GameService {
     let rng = new PrngService();
     rng.reseed(+today);
     let randomNumber = rng.next();
-    let index = Math.floor(randomNumber*(filteredEvents.length+1));
+    let index = Math.floor(randomNumber*(filteredEvents.length));
     
     this.solution = filteredEvents[index];
 
