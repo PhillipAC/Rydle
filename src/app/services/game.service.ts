@@ -8,6 +8,7 @@ import { DigitResult } from '../models/digitResult';
 import { Direction } from '../enumerations/Direction';
 import { RecordService } from './record.service';
 import { Summary } from '../models/summary';
+import { Page } from '../models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -104,6 +105,16 @@ export class GameService {
     this.solution = filteredEvents[index];
 
     this.gameLoadedObserver.next(this.solution);
+  }
+
+  getSolutionEventUrls(): Page[]{
+    console.log(this.solution);
+    let pages = this.solution.pages.map((p: any) => {
+      let page = new Page(p.content_urls.desktop.page, p.titles.normalized);
+      console.log(page);
+      return page;
+    })
+    return pages;
   }
 
   checkGuess(guess: number[], saveGuess = true): void{

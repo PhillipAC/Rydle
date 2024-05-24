@@ -1,19 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
+import { Page } from '../../models/page';
 
 @Component({
   selector: 'app-share',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, NgFor],
   templateUrl: './share.component.html',
   styleUrl: './share.component.scss'
 })
-export class ShareComponent {
+export class ShareComponent implements OnInit {
 
   showSuccess = false;
+  eventPages: Page[] = [];
 
   constructor(private gameService: GameService){}
+
+  ngOnInit(): void {
+    this.eventPages = this.gameService.getSolutionEventUrls();
+  }
 
   copySummary()
   {
