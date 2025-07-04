@@ -33,11 +33,13 @@ import { Subscription } from 'rxjs';
   styleUrl: './rydle.component.scss'
 })
 export class RydleComponent implements OnInit, AfterViewInit, OnDestroy {
-  description = "";
-  shareEnabled = false;
-  showSummary = false;
-  showGuessInput = true;
-  isLoading = true;
+  description: string = "";
+  shareEnabled: boolean = false;
+  showSummary: boolean = false;
+  showGuessInput: boolean = true;
+  isLoading: boolean = true;
+  loadFailed: boolean = false;
+  errorMessage: string = "";
 
   gameLoadedSub: Subscription | null = null;
   guessCheckedSub: Subscription | null = null;
@@ -74,18 +76,29 @@ export class RydleComponent implements OnInit, AfterViewInit, OnDestroy {
     if(isRandomGame)
     {
       this.gameService.getRandomGame()
-        .subscribe((data) => this.gameService.setupGame(data.events));
+        .subscribe((data) => this.gameService.setupGame(data.events),
+          (error) => {
+            this.errorMessage = error.status + ": " + error.statusText;
+            this.loadFailed = true;
+        });
     }
     else if(randomId != null)
     {
       this.gameService.getGameDataByCode(randomId)
-        .subscribe((data) => this.gameService.setupGame(data.events));
+        .subscribe((data) => this.gameService.setupGame(data.events),
+          (error) => {
+            this.errorMessage = error.status + ": " + error.statusText;
+            this.loadFailed = true;
+        });
     }
     else{
       this.gameService.getGameData()
         .subscribe((data) => {
           this.gameService.setupGame(data.events)
           this.recordService.loadPastGuesses();
+        }, (error) => {
+          this.errorMessage = error.status + ": " + error.statusText;
+          this.loadFailed = true;
         });
     }
   }
